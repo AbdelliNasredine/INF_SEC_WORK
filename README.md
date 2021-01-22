@@ -1,4 +1,6 @@
-# Git & Github
+# SSYSINF labs 
+This repo includes my work during the course
 
-This repo include my work during the course 
-
+### Current Progress:
+- [x] Git & Git hub
+- [x] Snort IDS
