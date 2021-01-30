@@ -51,9 +51,9 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         /*
           TODO:
-           1- IMPLEMENT OPENING FILE WHEN LOAD BUTTON IS CLICKED
-           2- PRINT LOADED FILE'S DATA
-           3- SHOW FILE PATH ON TEXT FIELD
+           1- IMPLEMENT OPENING FILE WHEN LOAD BUTTON IS CLICKED (x)
+           2- PRINT LOADED FILE'S DATA (x)
+           3- SHOW FILE PATH ON TEXT FIELD (x)
            4- GET OPTION FROM UI
          */
 
