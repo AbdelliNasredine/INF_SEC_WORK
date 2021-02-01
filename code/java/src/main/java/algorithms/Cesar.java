@@ -21,7 +21,7 @@ public final class Cesar {
      */
     private Character process(Character input, boolean encOrDec) {
         if (Character.isAlphabetic(input)) {
-            int offset = Character.getType(input) == Character.UPPERCASE_LETTER ? 64 : 96;
+            int offset = Character.getType(input) == Character.UPPERCASE_LETTER ? 65 : 97;
             int output = input - offset;
             output = encOrDec ? (output + k) : (output - k);
             output %= 26;
