@@ -1,3 +1,4 @@
+import algorithms.Cesar;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -9,20 +10,15 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
-
-    private final ObservableList<String> algorithmsList =
-            FXCollections.observableList(Arrays.asList("CESAR"));
-
-    private final BooleanProperty doneProperty = new SimpleBooleanProperty(true);
 
     /**
      * ================= UI FIELDS =================
@@ -57,6 +53,15 @@ public class Controller implements Initializable {
     @FXML
     private Button saveButton;
 
+    /**
+     * ================= CONSTANTS =================
+     */
+
+    private final ObservableList<String> algorithmsList =
+            FXCollections.observableList(Arrays.asList("CESAR"));
+    private final BooleanProperty doneProperty = new SimpleBooleanProperty(true);
+    private String fileContent;
+    private String output;
 
     /**
      * ================= METHODS =================
@@ -75,15 +80,59 @@ public class Controller implements Initializable {
         // setup of  ui bindings / listener
         algorithmComboBox.setItems(algorithmsList);
         keySpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 25, 1));
-
+        startButton.disableProperty().setValue(true);
         startButton.setOnAction(this::handleStartAction);
         loadButton.setOnAction(this::handleLoadingFile);
+        saveButton.setOnAction(this::handleSavingFile);
         saveButton.disableProperty().bind(doneProperty);
     }
 
-    private void handleStartAction(ActionEvent event) {
-        // read operation type , algorithm, key
+    private void handleSavingFile(ActionEvent event) {
+        if(!output.isEmpty()) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Saving Output File");
+            File outputFile = fileChooser.showSaveDialog(loadButton.getParent().getScene().getWindow());
+            if(outputFile != null) {
+                try {
+                    FileWriter fileWriter = new FileWriter(outputFile);
+                    for(Character character : output.toCharArray()) {
+                        fileWriter.append(character);
+                    }
+                    fileWriter.flush();
+                    fileWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }else {
+            showAlert("Output is Empty");
+        }
+    }
 
+    private void handleStartAction(ActionEvent event) {
+        // reading operation type
+        String opType = ((RadioButton) toggleGroup.getSelectedToggle()).getText();
+        // reading algorithm
+        String algorithm = algorithmComboBox.getValue();
+        if (algorithm == null) {
+            showAlert("Please select an algorithm");
+            return;
+        }
+        // reading key
+        Integer key = keySpinner.getValue();
+        System.out.printf("\nopType = %s\nalgorithm = %s\nkey = %s\n", opType, algorithm, key);
+        if (!fileContent.isEmpty()) {
+            printOnConsole(String.format("Starting %s %s on file content with key = %s", algorithm, opType, key));
+            Cesar cesar = new Cesar(key);
+            output = opType.equals(encryptionRadioButton.getText()) ? cesar.encrypt(fileContent) :
+                    cesar.decrypt(fileContent);
+            System.out.println(output);
+            doneProperty.setValue(false);
+            printOnConsole("Finished, output is");
+            printOnConsole(output);
+        } else {
+            showAlert("File is empty");
+        }
     }
 
     private void handleLoadingFile(ActionEvent event) {
@@ -95,24 +144,39 @@ public class Controller implements Initializable {
         fileChooser.getExtensionFilters().add(textFilesExtensionFilter);
         File file = fileChooser.showOpenDialog(loadButton.getParent().getScene().getWindow());
         if (file != null) {
+            printOnConsole(file.getName() + " file opened");
             fileInputTextField.setText(file.getAbsolutePath());
-            String fileContent = readFile(file);
+            fileContent = readFile(file);
+            startButton.disableProperty().setValue(false);
             System.out.println(fileContent);
         }
     }
 
     private String readFile(File file) {
+        printOnConsole("Reading file content");
         StringBuilder sb = new StringBuilder();
-        try(FileReader fileReader = new FileReader(file)) {
+        try (FileReader fileReader = new FileReader(file)) {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
-            while((line = bufferedReader.readLine()) != null){
+            while ((line = bufferedReader.readLine()) != null) {
+                printOnConsole(line);
                 sb.append(String.format("%s\n", line));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return sb.toString();
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(message);
+        alert.show();
+    }
+
+    private void printOnConsole(String message) {
+        DateFormat df = new SimpleDateFormat("hh:mm:ss");
+        consoleTextArea.appendText(String.format("%-10s %s\n", df.format(new Date()), message));
     }
 
 }
