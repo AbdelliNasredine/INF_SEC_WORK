@@ -1,5 +1,7 @@
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -7,13 +9,20 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
+    private final ObservableList<String> algorithmsList =
+            FXCollections.observableList(Arrays.asList("CESAR"));
+
+    private final BooleanProperty doneProperty = new SimpleBooleanProperty(true);
 
     /**
      * ================= UI FIELDS =================
@@ -23,9 +32,6 @@ public class Controller implements Initializable {
 
     @FXML
     private Button loadButton;
-
-    @FXML
-    private TextField fileIOutputTextField;
 
     @FXML
     private RadioButton encryptionRadioButton;
@@ -40,7 +46,16 @@ public class Controller implements Initializable {
     private ComboBox<String> algorithmComboBox;
 
     @FXML
+    private Spinner<Integer> keySpinner;
+
+    @FXML
+    private TextArea consoleTextArea;
+
+    @FXML
     private Button startButton;
+
+    @FXML
+    private Button saveButton;
 
 
     /**
@@ -54,22 +69,21 @@ public class Controller implements Initializable {
            1- IMPLEMENT OPENING FILE WHEN LOAD BUTTON IS CLICKED (x)
            2- PRINT LOADED FILE'S DATA (x)
            3- SHOW FILE PATH ON TEXT FIELD (x)
-           4- GET OPTION FROM UI
+           4- GET OPTION FROM UI (x)
          */
 
         // setup of  ui bindings / listener
-        fileInputTextField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                System.out.println(newValue);
-                String outputName = newValue.substring(0, newValue.length() - 3);
-                outputName += new Date().getTime() + ".txt";
-                fileIOutputTextField.setText(outputName);
-            }
-        });
+        algorithmComboBox.setItems(algorithmsList);
+        keySpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 25, 1));
 
-        // when `load` button is clicked call `handleLoadingFile` method
+        startButton.setOnAction(this::handleStartAction);
         loadButton.setOnAction(this::handleLoadingFile);
+        saveButton.disableProperty().bind(doneProperty);
+    }
+
+    private void handleStartAction(ActionEvent event) {
+        // read operation type , algorithm, key
+
     }
 
     private void handleLoadingFile(ActionEvent event) {
