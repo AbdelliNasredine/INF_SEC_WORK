@@ -1,7 +1,7 @@
-const cipher = "Vjg kpigpwkva qh vjg etkokpcnu ku nkokvnguu";
+const cipher = "Dgecwug vjg oguucigu crrgctgf vq dg htqo c vtwuvgf uqwteg";
 const clear =
-  "User initiated remote execution attacks for example hostile web site Trojan horse email and so on";
-const k = 4;
+  "for example when thieves decide to rob a bank, they don't just walk in and start demanding money not the smart ones anyway";
+const k = 24;
 
 const additive_encrypt = function () {
   const chars = clear.split("");
