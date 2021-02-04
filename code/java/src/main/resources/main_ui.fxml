@@ -5,7 +5,6 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
@@ -69,7 +68,7 @@
                             </children>
                         </VBox>
                         <VBox spacing="4.0" />
-                        <TitledPane expanded="false" text="Options">
+                        <TitledPane text="Options">
                             <content>
                                 <VBox spacing="8.0">
                                     <children>
@@ -124,7 +123,7 @@
                                           </Text>
                                        </children>
                                     </Pane>
-                                    <Spinner fx:id="keySpinner" editable="true" />
+                                    <TextField fx:id="keyField" />
                                  </children>
                               </HBox>
                                     </children>

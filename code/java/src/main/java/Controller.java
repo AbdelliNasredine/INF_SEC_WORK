@@ -42,7 +42,7 @@ public class Controller implements Initializable {
     private ComboBox<String> algorithmComboBox;
 
     @FXML
-    private Spinner<Integer> keySpinner;
+    private TextField keyField;
 
     @FXML
     private TextArea consoleTextArea;
@@ -58,7 +58,7 @@ public class Controller implements Initializable {
      */
 
     private final ObservableList<String> algorithmsList =
-            FXCollections.observableList(Arrays.asList("CESAR"));
+            FXCollections.observableList(Arrays.asList("CESAR", "VEGINER"));
     private final BooleanProperty doneProperty = new SimpleBooleanProperty(true);
     private String fileContent;
     private String output;
@@ -79,7 +79,7 @@ public class Controller implements Initializable {
 
         // setup of  ui bindings / listener
         algorithmComboBox.setItems(algorithmsList);
-        keySpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 25, 1));
+        //keyField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 25, 1));
         startButton.disableProperty().setValue(true);
         startButton.setOnAction(this::handleStartAction);
         loadButton.setOnAction(this::handleLoadingFile);
@@ -119,7 +119,7 @@ public class Controller implements Initializable {
             return;
         }
         // reading key
-        Integer key = keySpinner.getValue();
+        Integer key = Integer.parseInt(keyField.getText());
         System.out.printf("\nopType = %s\nalgorithm = %s\nkey = %s\n", opType, algorithm, key);
         if (!fileContent.isEmpty()) {
             printOnConsole(String.format("Starting %s %s on file content with key = %s", algorithm, opType, key));
