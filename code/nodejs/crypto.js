@@ -1,7 +1,7 @@
-const cipher = "Dgecwug vjg oguucigu crrgctgf vq dg htqo c vtwuvgf uqwteg";
+const cipher = "Vjg kpigpwkva qh vjg etkokpcnu ku nkokvnguu";
 const clear =
-  "for example when thieves decide to rob a bank, they don't just walk in and start demanding money not the smart ones anyway";
-const k = 24;
+  " User initiated remote execution attacks for example hostile web site Trojan horse email and so on";
+const k = 4;
 
 const additive_encrypt = function () {
   const chars = clear.split("");
@@ -23,8 +23,10 @@ const additive_decrypt = function (key) {
     if (char.match(/[A-Z]/gi)) {
       const isUpperCase = char.match(/[A-Z]/);
       const offset = isUpperCase ? 65 : 97;
-      const newCode = (char.charCodeAt(0) - offset - key) % 26;
-      return String.fromCharCode(newCode + offset);
+      let newCode = char.charCodeAt(0) - offset - key;
+      const isNegative = newCode < 0;
+      newCode = isNegative ? offset + 26 + newCode : newCode % 26;
+      return String.fromCharCode(isNegative ? newCode : newCode + offset);
     }
     return char;
   });
