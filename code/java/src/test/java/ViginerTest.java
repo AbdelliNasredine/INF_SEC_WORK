@@ -13,4 +13,11 @@ public class ViginerTest {
         assertEquals("E(HELLO) = FIDJS", "FIDJS", cipher);
     }
 
+    @Test
+    public void testDecryption(){
+        Viginer viginer = new Viginer("YES");
+        String cipher = viginer.decrypt("FIDJS");
+        assertEquals("E(FIDJS) = HELLO", "HELLO", cipher);
+    }
+
 }

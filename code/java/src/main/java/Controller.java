@@ -1,4 +1,5 @@
 import algorithms.Cesar;
+import algorithms.Viginer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -56,9 +57,10 @@ public class Controller implements Initializable {
     /**
      * ================= CONSTANTS =================
      */
-
+    private static final String CESAR = "CESAR";
+    private static final String VEGINER = "VEGINER";
     private final ObservableList<String> algorithmsList =
-            FXCollections.observableList(Arrays.asList("CESAR", "VEGINER"));
+            FXCollections.observableList(Arrays.asList(CESAR, VEGINER));
     private final BooleanProperty doneProperty = new SimpleBooleanProperty(true);
     private String fileContent;
     private String output;
@@ -88,14 +90,14 @@ public class Controller implements Initializable {
     }
 
     private void handleSavingFile(ActionEvent event) {
-        if(!output.isEmpty()) {
+        if (!output.isEmpty()) {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Saving Output File");
             File outputFile = fileChooser.showSaveDialog(loadButton.getParent().getScene().getWindow());
-            if(outputFile != null) {
+            if (outputFile != null) {
                 try {
                     FileWriter fileWriter = new FileWriter(outputFile);
-                    for(Character character : output.toCharArray()) {
+                    for (Character character : output.toCharArray()) {
                         fileWriter.append(character);
                     }
                     fileWriter.flush();
@@ -104,7 +106,7 @@ public class Controller implements Initializable {
                     e.printStackTrace();
                 }
             }
-        }else {
+        } else {
             showAlert("Output is Empty");
         }
     }
@@ -119,17 +121,34 @@ public class Controller implements Initializable {
             return;
         }
         // reading key
-        Integer key = Integer.parseInt(keyField.getText());
+        String key = keyField.getText();
         System.out.printf("\nopType = %s\nalgorithm = %s\nkey = %s\n", opType, algorithm, key);
         if (!fileContent.isEmpty()) {
             printOnConsole(String.format("Starting %s %s on file content with key = %s", algorithm, opType, key));
-            Cesar cesar = new Cesar(key);
-            output = opType.equals(encryptionRadioButton.getText()) ? cesar.encrypt(fileContent) :
-                    cesar.decrypt(fileContent);
-            System.out.println(output);
-            doneProperty.setValue(false);
-            printOnConsole("Finished, output is");
-            printOnConsole(output);
+            if (algorithm.equals(CESAR)) {
+                int keyCode = 0;
+                try {
+                    keyCode = Integer.parseInt(key);
+                    return;
+                }catch (NumberFormatException e){
+                    showAlert("Key should be a number");
+                }
+                Cesar cesar = new Cesar(keyCode);
+                output = opType.equals(encryptionRadioButton.getText()) ? cesar.encrypt(fileContent) :
+                        cesar.decrypt(fileContent);
+                System.out.println(output);
+                doneProperty.setValue(false);
+                printOnConsole("Finished, output is");
+                printOnConsole(output);
+            } else {
+                Viginer viginer = new Viginer(key);
+                output = opType.equals(encryptionRadioButton.getText()) ? viginer.encrypt(fileContent) :
+                        viginer.decrypt(fileContent);
+                System.out.println(output);
+                doneProperty.setValue(false);
+                printOnConsole("Finished, output is");
+                printOnConsole(output);
+            }
         } else {
             showAlert("File is empty");
         }

@@ -1,7 +1,7 @@
-const cipher = "Vjg kpigpwkva qh vjg etkokpcnu ku nkokvnguu";
+const cipher = "Yjq ku ycvejkpi vjg ycvejgt? Cpf jqy?";
 const clear =
-  " User initiated remote execution attacks for example hostile web site Trojan horse email and so on";
-const k = 4;
+  "oftentimes admins will forget about creating checksums until after a compromise has been detected";
+const k = 14;
 
 const additive_encrypt = function () {
   const chars = clear.split("");
