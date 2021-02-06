@@ -14,14 +14,12 @@ public final class Viginer {
         int keyIndex = 0;
         for (Character character : clearText.toCharArray()) {
             if(Character.isAlphabetic(character)) {
-                int keyCode = key.charAt(keyIndex);
-                int offset = Character.getType(character) == Character.UPPERCASE_LETTER ? 65 : 97;
+                int keyCode = Utils.getCharCodeOff(key.charAt(keyIndex));
+                int offset = Utils.getOffset(character);
                 int newCharCode = character - offset;
-                newCharCode += keyCode;
-                newCharCode %= 26;
-                newCharCode += offset;
+                newCharCode = (newCharCode + keyCode) % 26;
+                sb.append(Utils.charFromCodeOff(newCharCode, offset));
                 keyIndex = (keyIndex + 1) % keySize;
-                sb.append((char) newCharCode);
             }else {
                 sb.append(character);
             }
